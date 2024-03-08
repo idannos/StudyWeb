@@ -5,8 +5,8 @@ import {QuizData} from "../Components/Quiz/Quiz";
 export const uploadFile = async (file: File): Promise<QuizData> => {
     const formData = new FormData();
     formData.append('file', file);
-
-    const response = await axios.post('http://localhost:5000/upload', formData, {
+    const url = 'http://localhost:5000/upload';
+    const response = await axios.post(url, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
