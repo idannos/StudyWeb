@@ -11,7 +11,6 @@ const root = ReactDOM.createRoot(
 const home = window.location.href.includes("localhost") ? "/" : process.env.PUBLIC_URL
 root.render(
     <React.StrictMode>
-        {/*remove basename={process.env.PUBLIC_URL} when running locally*/}
         <BrowserRouter basename={home}>
             <App/>
         </BrowserRouter>
