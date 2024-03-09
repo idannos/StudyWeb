@@ -92,7 +92,7 @@ const MainPage: React.FC = () => {
                             </div>
                     }
                 </div>
-                {!isLoading && (
+                {isLoading && (
                     <div className="flex flex-col justify-center items-center mt-8">
                         <CircularProgress/>
                         <h2 className="text-center text-lg mt-6">
