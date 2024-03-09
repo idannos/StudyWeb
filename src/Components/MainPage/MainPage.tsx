@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import TopBar from "../TopBar/TopBar";
-import {Container} from "@mui/material";
+import {CircularProgress, Container} from "@mui/material";
 import {useDropzone} from 'react-dropzone';
-import {uploadFile} from "../../api/upoadFile";
+import {uploadFile, checkStatus} from "../../api/upoadFile"
 import Quiz, {QuizData} from "../Quiz/Quiz";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 const MainPage: React.FC = () => {
     const [quizData, setQuizData] = useState<QuizData | null>(null);
+    const [taskID, setTaskID] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onDrop = async (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -16,13 +18,39 @@ const MainPage: React.FC = () => {
                 alert('Only PDF files are accepted. Please upload a file with a .pdf extension.');
                 return;
             }
-            const quizData: QuizData = await uploadFile(file);
-            setQuizData(quizData);
+            setIsLoading(true);
+            const taskId = await uploadFile(file);
+            setTaskID(taskId);
         } catch (error) {
-            console.error("Failed to upload file and receive quiz data", error);
-            // Implement appropriate error handling here
+            console.error("Failed to upload file and receive task ID", error);
+            window.alert("Failed to upload file and receive task ID");
+            setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const pollTaskStatus = async () => {
+            if (taskID) {
+                try {
+                    const status = await checkStatus(taskID);
+                    if (status.status === 'completed') {
+                        setIsLoading(false);
+                        setQuizData(status.result);
+                    } else {
+                        setTimeout(pollTaskStatus, 4000);
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch task status", error);
+                    window.alert("Failed to fetch task status");
+                }
+            }
+        };
+        pollTaskStatus();
+
+        return () => {
+            setTaskID(null); // Reset taskID when component unmounts
+        };
+    }, [taskID]);
 
     const onDropRejected = (fileRejections: any) => {
         alert('Only PDF files are accepted, and one file at a time. Please upload a file with a .pdf extension.');
@@ -40,7 +68,6 @@ const MainPage: React.FC = () => {
                 main: '#0dcaf0', // This is a close approximation of Tailwind's cyan-500
                 contrastText: '#ffffff', // Ensuring text is white for good contrast
             },
-            // You can customize other palette options as needed
         },
     });
     return (
@@ -56,11 +83,28 @@ const MainPage: React.FC = () => {
                     {
                         isDragActive ?
                             <p className="text-lg text-blue-500 font-semibold">Drop the file here ...</p> :
-                            <p className="text-lg text-gray-700 font-semibold whitespace-nowrap">Drag 'n' drop a file
-                                here, or click to select a file</p>
+                            <div
+                                className="text-lg text-gray-700 font-semibold whitespace-nowrap flex-col items-center justify-center">
+                                <div>
+                                    Drag 'n' drop a file here
+                                </div>
+                                <div className={"flex justify-center"}>or click to select a file</div>
+                            </div>
                     }
                 </div>
-
+                {!isLoading && (
+                    <div className="flex flex-col justify-center items-center mt-8">
+                        <CircularProgress/>
+                        <h2 className="text-center text-lg mt-6">
+                            <div className={"font-bold"}>Generating quiz!</div>
+                            <div>
+                                this may take about 40 seconds. Please
+                                do
+                                not leave or reload the page.
+                            </div>
+                        </h2>
+                    </div>
+                )}
                 {quizData && quizData?.questions?.length && <div className={"mt-12"}>
                     <Quiz quizData={quizData}/>
                 </div>}
