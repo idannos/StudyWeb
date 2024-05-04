@@ -149,7 +149,13 @@ const TopBar = () => {
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                                    <Typography textAlign="center" onClick={()=>{
+                                        if(setting === 'Logout'){
+                                            localStorage.removeItem('accessToken');
+                                            localStorage.removeItem('refreshToken');
+                                            window.location.href = '/';
+                                        }
+                                    }}>{setting}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

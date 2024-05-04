@@ -2,14 +2,16 @@ import React, {useState, useEffect} from 'react';
 import TopBar from "../TopBar/TopBar";
 import {CircularProgress, Container} from "@mui/material";
 import {useDropzone} from 'react-dropzone';
-import {uploadFile, checkStatus} from "../../api/upoadFile"
+import {uploadFile, checkStatus} from "../../api/apiFunctions";
 import Quiz, {QuizData} from "../Quiz/Quiz";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import FilePreview from "../FilePreview/FilePreview";
 
 const MainPage: React.FC = () => {
     const [quizData, setQuizData] = useState<QuizData | null>(null);
     const [taskID, setTaskID] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [uploadedFiles, setUploadedFiles] = useState(["calculus", "calculus 2", "biology 1", "course", "test5", "test6", "test7", "test8", "test9", "test10"]);
 
     const onDrop = async (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -78,7 +80,7 @@ const MainPage: React.FC = () => {
 
             <Container maxWidth="xl">
                 <div {...getRootProps()}
-                     className={`mt-8 flex justify-center items-center border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ease-in-out w-full max-w-md mx-auto ${isDragActive ? 'border-blue-500 bg-blue-100' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'} py-8 px-4`}>
+                     className="mt-8 flex justify-center items-center border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ease-in-out w-full max-w-md mx-auto hover:bg-gray-100 py-8 px-4">
                     <input {...getInputProps()} />
                     {
                         isDragActive ?
@@ -95,24 +97,20 @@ const MainPage: React.FC = () => {
                 {isLoading && (
                     <div className="flex flex-col justify-center items-center mt-8">
                         <CircularProgress/>
-                        <h2 className="text-center text-lg mt-6">
-                            <div className={"font-bold"}>Generating quiz!</div>
-                            <div>
-                                this may take about 40 seconds. Please
-                                do
-                                not leave or reload the page.
+                        <h2 className="text-lg mt-6">
+                            <div className={"flex flex-col align-middle items-center"}>
+                                <div>Generating your quiz!</div>
+                                <div>Please dont leave the page, it can take up to 40 seconds :-)</div>
                             </div>
                         </h2>
                     </div>
                 )}
-                {quizData && quizData?.questions?.length && <div className={"mt-12"}>
-                    <Quiz quizData={quizData}/>
-                </div>}
-                {quizData && !quizData?.questions?.length && <div className={"mt-12"}>
-                    <h2 className="text-2xl font-bold text-center">No questions found in the quiz data (for dev-
-                        probably problem with json)</h2>
-                </div>}
-
+                {/*<div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">*/}
+                {/*    {uploadedFiles.map((fileName, index) => (*/}
+                {/*        <FilePreview key={index} fileName={fileName}/>*/}
+                {/*    ))}*/}
+                {/*</div>*/}
+                {quizData && <Quiz quizData={quizData}/>}
             </Container>
         </div>
     );

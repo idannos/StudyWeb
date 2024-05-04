@@ -1,9 +1,18 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {loginValidation} from "../../api/apiFunctions";
 
 const loginHandler = (email: string, password: string, action: () => void) => {
-    // Functionality after login is successful
-    action();
+    loginValidation(email, password).then((data) => {
+        console.log(data);
+        if(data.status === 401){
+            alert("Invalid credentials. Please try again or contact us.");
+        }
+        if (data.status === 200) {
+            action();
+        }
+    });
+    //action();
 }
 
 const Login = () => {
