@@ -39,9 +39,9 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="flex items-center text-center">
-                    <div className="text-sm text-center">
-                        <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500"> Forgot your password? </a>
-                    </div>
+                    {/*<div className="text-sm text-center">*/}
+                    {/*    <a className="font-medium text-indigo-600 hover:text-indigo-500"> Forgot your password? </a>*/}
+                    {/*</div>*/}
                 </div>
                 <div>
                     <button
@@ -52,11 +52,11 @@ const Login = () => {
                         Sign in
                     </button>
                 </div>
-                <div className="text-sm text-center">
-                    <p className="font-medium text-indigo-600 hover:text-indigo-500">
-                        Don't have an account? <a href="#" className="text-indigo-600 hover:text-indigo-500">Register</a>
-                    </p>
-                </div>
+                {/*<div className="text-sm text-center">*/}
+                {/*    <p className="font-medium text-indigo-600 hover:text-indigo-500">*/}
+                {/*        Don't have an account? <a className="text-indigo-600 hover:text-indigo-500">Register</a>*/}
+                {/*    </p>*/}
+                {/*</div>*/}
             </div>
         </section>
     );

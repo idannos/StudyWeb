@@ -54,7 +54,9 @@ axios.interceptors.response.use(response => response, async error => {
     if (!refreshToken) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/';
+        if (window.location.pathname !== '/'){
+            window.location.href = '/';
+        }
         return Promise.reject(error);
     }
     const isRefreshTokenExpired = (refreshToken: string) => Date.now() >= (JSON.parse(atob(refreshToken.split('.')[1]))).exp * 1000
