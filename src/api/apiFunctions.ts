@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {loginUrl} from "../Consts/consts";
 
 const baseRemoteUrl = 'https://study-backend-f93592ee2f5e.herokuapp.com'
 const baseLocalUrl = 'http://127.0.0.1:5000'
@@ -55,8 +56,8 @@ axios.interceptors.response.use(response => response, async error => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         console.log(window.location.pathname);
-        if (window.location.pathname !== '/'){
-            window.location.href = '/';
+        if (window.location.pathname !== loginUrl){
+            window.location.href = loginUrl;
         }
         return Promise.reject(error);
     }
@@ -64,7 +65,7 @@ axios.interceptors.response.use(response => response, async error => {
     if (isRefreshTokenExpired(refreshToken)) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/';
+        window.location.href = loginUrl;
         return Promise.reject(error);
     }
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -76,14 +77,13 @@ axios.interceptors.response.use(response => response, async error => {
                     }
                 })
                     .then(tokenResponse => {
-                        console.log('Token Response:', tokenResponse);
                         if (tokenResponse.status === 200) {
                             localStorage.setItem('accessToken', tokenResponse.data.access_token);
                             return tokenResponse.data.access_token;
                         } else {
                             localStorage.removeItem('accessToken');
                             localStorage.removeItem('refreshToken');
-                            window.location.href = '/';
+                            window.location.href = loginUrl;
                             throw new Error('Invalid token response');
                         }
                     })
@@ -91,7 +91,7 @@ axios.interceptors.response.use(response => response, async error => {
                         console.error('Refresh token invalid:', refreshError);
                         localStorage.removeItem('accessToken');
                         localStorage.removeItem('refreshToken');
-                        window.location.href = '/';
+                        window.location.href = loginUrl;
                         throw refreshError;
                     })
                     .finally(() => {
@@ -100,7 +100,7 @@ axios.interceptors.response.use(response => response, async error => {
             } else {
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
-                window.location.href = '/';
+                window.location.href = loginUrl;
                 return Promise.reject(new Error('No refresh token available'));
             }
         }

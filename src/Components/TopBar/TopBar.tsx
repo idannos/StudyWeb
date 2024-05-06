@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
+import {loginUrl} from "../../Consts/consts";
 
 const pages = ['About', 'Pricing'];
 const settings = ['Account', 'Logout'];
@@ -153,7 +154,7 @@ const TopBar = () => {
                                         if(setting === 'Logout'){
                                             localStorage.removeItem('accessToken');
                                             localStorage.removeItem('refreshToken');
-                                            window.location.href = '/';
+                                            window.location.href = loginUrl;
                                         }
                                     }}>{setting}</Typography>
                                 </MenuItem>
