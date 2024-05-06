@@ -54,6 +54,7 @@ axios.interceptors.response.use(response => response, async error => {
     if (!refreshToken) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        console.log(window.location.pathname);
         if (window.location.pathname !== '/'){
             window.location.href = '/';
         }
