@@ -5,8 +5,10 @@ import './App.css';
 import MainPage from "./Components/MainPage/MainPage";
 import FileData from "./Components/FileData/FileData";
 import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
+import LogRocket from 'logrocket';
 
 const App = () => {
+    LogRocket.init('5xrm0w/lemidai');
     return (
         <Routes>
             <Route path="/" element={<Signin/>}/>
