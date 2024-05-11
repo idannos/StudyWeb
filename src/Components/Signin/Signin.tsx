@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {loginValidation} from "../../api/apiFunctions";
+import LogRocket from "logrocket";
 
 const loginHandler = (email: string, password: string, action: () => void) => {
     loginValidation(email, password).then((data) => {
@@ -9,6 +10,13 @@ const loginHandler = (email: string, password: string, action: () => void) => {
             alert("Invalid credentials. Please try again or contact us.");
         }
         if (data.status === 200) {
+            if (!window.location.hostname.includes("localhost")) {
+                LogRocket.identify(email, {
+                    name: email,
+                    email: email,
+                    subscriptionType: 'testing'
+                });
+            }
             action();
         }
     });
